@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { initiateCheckout } from '@/lib/stripe';
+import { useState } from "react";
+import { initiateCheckout } from "@/lib/stripe";
 
 interface CheckoutButtonProps {
   priceId: string;
@@ -15,7 +15,7 @@ export function CheckoutButton({
   priceId,
   bookTitle,
   quantity = 1,
-  className = 'btn theme-button w-fit',
+  className = "btn theme-button w-fit",
   children = `Buy ${bookTitle}`,
 }: CheckoutButtonProps) {
   const [isLoading, setIsLoading] = useState(false);
@@ -38,7 +38,7 @@ export function CheckoutButton({
       className={className}
       aria-busy={isLoading}
     >
-      {isLoading ? 'Processing...' : children}
+      {isLoading ? "Processing..." : children}
     </button>
   );
 }

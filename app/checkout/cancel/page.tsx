@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
+import Link from "next/link";
 
 export default function CancelPage() {
   return (
@@ -22,7 +22,9 @@ export default function CancelPage() {
           </svg>
         </div>
 
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Payment Cancelled</h1>
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">
+          Payment Cancelled
+        </h1>
         <p className="text-gray-600 mb-8">
           Your payment was cancelled. No charge has been made to your account.
         </p>

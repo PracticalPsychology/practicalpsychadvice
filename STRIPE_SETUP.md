@@ -53,6 +53,7 @@ STRIPE_WEBHOOK_SECRET=whsec_test_temporary
 ### Install Stripe CLI
 
 **macOS (using Homebrew):**
+
 ```bash
 brew install stripe/stripe-cli/stripe
 ```
@@ -185,7 +186,7 @@ Currently, the `checkout.session.completed` case has TODO comments. Implement:
 ```typescript
 case 'checkout.session.completed':
   const session = event.data.object as Stripe.Checkout.Session;
-  
+
   // Save order to database
   const order = await saveOrder({
     sessionId: session.id,
@@ -194,15 +195,15 @@ case 'checkout.session.completed':
     paymentStatus: session.payment_status,
     lineItems: session.line_items?.data || [],
   });
-  
+
   // Send confirmation email
   await sendOrderConfirmation(session.customer_email, order);
-  
+
   // Provision digital access if applicable
   if (order.type === 'ebook') {
     await sendDownloadLinks(session.customer_email, order.bookIds);
   }
-  
+
   break;
 ```
 
@@ -279,6 +280,7 @@ When ready for production:
 ## Support
 
 For issues:
+
 1. Check Stripe Dashboard logs
 2. Check application error logs
 3. Consult Stripe Documentation

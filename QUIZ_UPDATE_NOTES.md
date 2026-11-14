@@ -1,17 +1,20 @@
 # PsychePulse Quiz Update - 10 Comprehensive Tests
 
 ## Overview
+
 The ppa-quiz.html has been successfully updated from 5 tests to 10 comprehensive psychology self-assessment tests. The data structure has been refactored for better maintainability.
 
 ## Changes Made
 
 ### 1. **New External Data File**
+
 - **File**: `quiz-data-10tests.js`
 - **Purpose**: Centralized storage for all 10 quiz definitions
 - **Contents**: Quiz metadata (id, title, category, icon, etc.) without the full question arrays
 - **Location**: `/Users/lesoto/Sites/PRODUCTION/practicalpsychadvice.com/`
 
 ### 2. **Updated HTML File**
+
 - **File**: `ppa-quiz.html`
 - **Changes**:
   - Removed inline quiz data (reduced from ~700 to ~370 lines)
@@ -65,6 +68,7 @@ ppa-quiz.html
 ## Next Steps
 
 To complete the implementation:
+
 1. Add the full questions arrays to each quiz in `quiz-data-10tests.js`
 2. Implement the quiz-take UI component in `renderQuizTake()`
 3. Implement results calculation and display in `renderResults()`

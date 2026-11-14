@@ -1,18 +1,18 @@
-import Link from 'next/link';
-import Stripe from 'stripe';
-import catalog from '@/lib/book-catalog.json';
+import Link from "next/link";
+import Stripe from "stripe";
+import catalog from "@/lib/book-catalog.json";
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2023-10-16',
+  apiVersion: "2023-10-16",
 });
 
-const SUPPORT_EMAIL = 'info@practicalpsychadvice.com';
+const SUPPORT_EMAIL = "info@practicalpsychadvice.com";
 
 // Download link for a purchased book, e.g. BOOK_DOWNLOAD_URL_BOOK_1 for slug "book-1".
 function downloadUrlFor(slug: string): string | undefined {
-  const key = `BOOK_DOWNLOAD_URL_${slug.toUpperCase().replace(/-/g, '_')}`;
+  const key = `BOOK_DOWNLOAD_URL_${slug.toUpperCase().replace(/-/g, "_")}`;
   return process.env[key] || undefined;
 }
 
@@ -21,10 +21,10 @@ type Result =
   | { ok: false };
 
 async function lookup(sessionId: string | undefined): Promise<Result> {
-  if (!sessionId || !sessionId.startsWith('cs_')) return { ok: false };
+  if (!sessionId || !sessionId.startsWith("cs_")) return { ok: false };
   try {
     const session = await stripe.checkout.sessions.retrieve(sessionId);
-    if (session.payment_status !== 'paid') return { ok: false };
+    if (session.payment_status !== "paid") return { ok: false };
     const book = catalog.find((b) => b.slug === session.metadata?.slug);
     if (!book) return { ok: false };
     return {
@@ -34,7 +34,7 @@ async function lookup(sessionId: string | undefined): Promise<Result> {
       downloadUrl: downloadUrlFor(book.slug),
     };
   } catch (err) {
-    console.error('Success page lookup failed:', err);
+    console.error("Success page lookup failed:", err);
     return { ok: false };
   }
 }
@@ -51,7 +51,9 @@ export default async function SuccessPage({
       <div className="bg-white rounded-lg shadow-2xl p-8 max-w-md w-full text-center">
         {result.ok ? (
           <>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Thank you!</h1>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+              Thank you!
+            </h1>
             <p className="text-gray-600 mb-6">
               Your purchase of <strong>{result.title}</strong> is confirmed.
             </p>
@@ -65,21 +67,30 @@ export default async function SuccessPage({
               </a>
             ) : (
               <p className="text-sm text-gray-700 bg-gray-50 rounded p-4 mb-4">
-                We&rsquo;ll email your copy to {result.email ?? 'the address you used at checkout'} shortly.
+                We&rsquo;ll email your copy to{" "}
+                {result.email ?? "the address you used at checkout"} shortly.
               </p>
             )}
 
             <p className="text-sm text-gray-600 mb-8">
-              Stripe emails your receipt{result.email ? ` to ${result.email}` : ''}. Questions? Write to{' '}
-              <a className="underline" href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a>.
+              Stripe emails your receipt
+              {result.email ? ` to ${result.email}` : ""}. Questions? Write to{" "}
+              <a className="underline" href={`mailto:${SUPPORT_EMAIL}`}>
+                {SUPPORT_EMAIL}
+              </a>
+              .
             </p>
           </>
         ) : (
           <>
-            <h1 className="text-2xl font-bold text-gray-900 mb-2">We couldn&rsquo;t confirm this order</h1>
+            <h1 className="text-2xl font-bold text-gray-900 mb-2">
+              We couldn&rsquo;t confirm this order
+            </h1>
             <p className="text-gray-600 mb-8">
-              If you were charged, email{' '}
-              <a className="underline" href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a>{' '}
+              If you were charged, email{" "}
+              <a className="underline" href={`mailto:${SUPPORT_EMAIL}`}>
+                {SUPPORT_EMAIL}
+              </a>{" "}
               and we&rsquo;ll sort it out.
             </p>
           </>

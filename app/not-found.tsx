@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import Link from "next/link";
 
 export default function NotFound() {
   return (
@@ -20,9 +20,12 @@ export default function NotFound() {
           </svg>
         </div>
 
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Page Not Found</h1>
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">
+          Page Not Found
+        </h1>
         <p className="text-gray-600 mb-8">
-          This page doesn&apos;t exist, moved, or the link had a typo. Let&apos;s get you back to the series.
+          This page doesn&apos;t exist, moved, or the link had a typo.
+          Let&apos;s get you back to the series.
         </p>
 
         <div className="space-y-3">

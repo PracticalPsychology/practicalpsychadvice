@@ -191,6 +191,7 @@ Full list: <https://stripe.com/docs/testing>
 #### Local Webhook Testing
 
 With Stripe CLI installed:
+
 ```bash
 stripe listen --forward-to localhost:3000/api/webhooks/stripe
 ```
@@ -211,6 +212,7 @@ stripe listen --forward-to localhost:3000/api/webhooks/stripe
 ### Image Assets
 
 All book cover images are located in `/images`:
+
 - `book-1-charisma.png`
 - `book-2-motivation.png`
 - `book-3-self-awareness.png`

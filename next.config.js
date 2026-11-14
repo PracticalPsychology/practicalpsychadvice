@@ -1,9 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  output: 'standalone',
+  output: "standalone",
   async rewrites() {
-    return [{ source: '/', destination: '/index.html' }];
+    return [{ source: "/", destination: "/index.html" }];
   },
 };
 

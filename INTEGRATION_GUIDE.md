@@ -104,9 +104,16 @@ npm run dev
 Every book's primary "Buy" CTA (`public/index.html` and all `public/audiences/*/book-N.html`) now has a sibling Stripe button next to the existing books2read retailer link, driven by `public/js/checkout.js`:
 
 ```html
-<a class="btn theme-button w-fit" href="https://books2read.com/u/booygA">Buy The Secrets of Charisma</a>
-<button type="button" class="btn stripe-btn w-fit" data-stripe-checkout
-  data-price-id="price_..." data-book-title="The Secrets of Charisma">
+<a class="btn theme-button w-fit" href="https://books2read.com/u/booygA"
+  >Buy The Secrets of Charisma</a
+>
+<button
+  type="button"
+  class="btn stripe-btn w-fit"
+  data-stripe-checkout
+  data-price-id="price_..."
+  data-book-title="The Secrets of Charisma"
+>
   Buy Instantly — Secure Checkout
 </button>
 ```
