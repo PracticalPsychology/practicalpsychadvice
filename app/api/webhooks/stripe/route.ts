@@ -1,31 +1,34 @@
-import { headers } from "next/headers";
 import { NextResponse, NextRequest } from "next/server";
-import Stripe from "stripe";
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2023-10-16",
-});
+import type Stripe from "stripe";
+import { getStripe } from "@/lib/stripe-server";
 
 export async function POST(req: NextRequest) {
-  const body = await req.text();
-  const headersList = headers();
-  const signature = headersList.get("stripe-signature") as string;
+  const signature = req.headers.get("stripe-signature");
+  if (!signature) return new NextResponse("Missing signature", { status: 400 });
+
+  const secret = process.env.STRIPE_WEBHOOK_SECRET;
+  if (!secret || !process.env.STRIPE_SECRET_KEY) {
+    console.error("Stripe webhook credentials are unavailable");
+    return new NextResponse("Webhook unavailable", { status: 503 });
+  }
 
   let event: Stripe.Event;
 
   try {
-    event = stripe.webhooks.constructEvent(
-      body,
+    event = getStripe().webhooks.constructEvent(
+      await req.text(),
       signature,
-      process.env.STRIPE_WEBHOOK_SECRET!,
+      secret,
     );
-  } catch (err: any) {
-    return new NextResponse(`Webhook Error: ${err.message}`, { status: 400 });
+  } catch {
+    return new NextResponse("Invalid webhook", { status: 400 });
   }
 
   switch (event.type) {
-    case "checkout.session.completed": {
+    case "checkout.session.completed":
+    case "checkout.session.async_payment_succeeded": {
       const session = event.data.object as Stripe.Checkout.Session;
+      if (session.payment_status !== "paid") break;
       // Delivery happens on /checkout/success (verified paid session + download link).
       // This log is the order record; search Cloud Run logs for "ORDER_COMPLETED".
       console.log(

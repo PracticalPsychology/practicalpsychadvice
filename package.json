@@ -9,18 +9,13 @@
     "start": "next start",
     "lint": "eslint .",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md}\"",
-    "screenshots": "node take-screenshots.js",
-    "type-check": "tsc --noEmit",
-    "check-firebase": "node lib/check-firebase.js"
+    "type-check": "tsc --noEmit"
   },
   "dependencies": {
     "next": "^14.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "stripe": "^14.0.0",
-    "@stripe/stripe-js": "^2.0.0",
-    "prettier": "^3.0.0",
-    "puppeteer": "^22.1.0"
+    "stripe": "^14.0.0"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",
@@ -28,6 +23,7 @@
     "@types/react-dom": "^18.2.0",
     "typescript": "^5.0.0",
     "eslint": "^8.0.0",
-    "eslint-config-next": "^14.0.0"
+    "eslint-config-next": "^14.0.0",
+    "prettier": "^3.0.0"
   }
 }

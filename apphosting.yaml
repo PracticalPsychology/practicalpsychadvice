@@ -1,0 +1,19 @@
+# Firebase App Hosting config (Cloud Run under the hood).
+# Secrets live in Google Secret Manager, never in this file.
+runConfig:
+  minInstances: 0
+  maxInstances: 2
+
+env:
+  - variable: STRIPE_SECRET_KEY
+    secret: STRIPE_SECRET_KEY
+    availability: [RUNTIME]
+  - variable: STRIPE_WEBHOOK_SECRET
+    secret: STRIPE_WEBHOOK_SECRET
+    availability: [RUNTIME]
+
+  # Where Stripe sends buyers back after checkout.
+  # Change to https://practicalpsychadvice.com once the custom domain is connected.
+  - variable: SITE_URL
+    value: https://practicalpsychadvice--pp-site-514801.us-central1.hosted.app
+    availability: [RUNTIME]

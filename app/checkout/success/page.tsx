@@ -1,12 +1,7 @@
-import Link from "next/link";
-import Stripe from "stripe";
+import { getStripe } from "@/lib/stripe-server";
 import catalog from "@/lib/book-catalog.json";
 
 export const dynamic = "force-dynamic";
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2023-10-16",
-});
 
 const SUPPORT_EMAIL = "info@practicalpsychadvice.com";
 
@@ -16,25 +11,29 @@ function downloadUrlFor(slug: string): string | undefined {
   return process.env[key] || undefined;
 }
 
-type Result =
-  | { ok: true; title: string; email: string | null; downloadUrl?: string }
-  | { ok: false };
+type Result = { ok: true; title: string; downloadUrl?: string } | { ok: false };
 
-async function lookup(sessionId: string | undefined): Promise<Result> {
-  if (!sessionId || !sessionId.startsWith("cs_")) return { ok: false };
+async function lookup(
+  sessionId: string | string[] | undefined,
+): Promise<Result> {
+  if (typeof sessionId !== "string" || !sessionId.startsWith("cs_")) {
+    return { ok: false };
+  }
   try {
-    const session = await stripe.checkout.sessions.retrieve(sessionId);
+    const session = await getStripe().checkout.sessions.retrieve(sessionId);
     if (session.payment_status !== "paid") return { ok: false };
     const book = catalog.find((b) => b.slug === session.metadata?.slug);
     if (!book) return { ok: false };
     return {
       ok: true,
       title: book.title,
-      email: session.customer_details?.email ?? null,
       downloadUrl: downloadUrlFor(book.slug),
     };
   } catch (err) {
-    console.error("Success page lookup failed:", err);
+    console.error(
+      "Success page lookup failed:",
+      err instanceof Error ? err.name : "Unknown error",
+    );
     return { ok: false };
   }
 }
@@ -42,7 +41,7 @@ async function lookup(sessionId: string | undefined): Promise<Result> {
 export default async function SuccessPage({
   searchParams,
 }: {
-  searchParams: { session_id?: string };
+  searchParams: { session_id?: string | string[] };
 }) {
   const result = await lookup(searchParams.session_id);
 
@@ -67,14 +66,16 @@ export default async function SuccessPage({
               </a>
             ) : (
               <p className="text-sm text-gray-700 bg-gray-50 rounded p-4 mb-4">
-                We&rsquo;ll email your copy to{" "}
-                {result.email ?? "the address you used at checkout"} shortly.
+                Your download link is unavailable. Contact{" "}
+                <a className="underline" href={`mailto:${SUPPORT_EMAIL}`}>
+                  {SUPPORT_EMAIL}
+                </a>{" "}
+                for help getting your copy.
               </p>
             )}
 
             <p className="text-sm text-gray-600 mb-8">
-              Stripe emails your receipt
-              {result.email ? ` to ${result.email}` : ""}. Questions? Write to{" "}
+              Questions about your purchase? Write to{" "}
               <a className="underline" href={`mailto:${SUPPORT_EMAIL}`}>
                 {SUPPORT_EMAIL}
               </a>
@@ -97,12 +98,12 @@ export default async function SuccessPage({
         )}
 
         <div className="space-y-3">
-          <Link
+          <a
             href="/"
             className="block w-full border-2 border-green-600 text-green-600 font-semibold py-3 rounded-lg hover:bg-green-50 transition"
           >
             Return to Home
-          </Link>
+          </a>
           <a
             href="/#series"
             className="block w-full text-green-700 font-semibold py-2 hover:underline"

@@ -1,10 +1,6 @@
 import { NextResponse, NextRequest } from "next/server";
-import Stripe from "stripe";
+import { getStripe } from "@/lib/stripe-server";
 import catalog from "@/lib/book-catalog.json";
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2023-10-16",
-});
 
 // Only prices from our own catalog may be sold through this endpoint.
 const ALLOWED_PRICES = new Map(catalog.map((b) => [b.priceId, b]));
@@ -29,7 +25,7 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const session = await stripe.checkout.sessions.create({
+    const session = await getStripe().checkout.sessions.create({
       line_items: [{ price: book.priceId, quantity: 1 }],
       mode: "payment",
       metadata: { slug: book.slug },
@@ -41,9 +37,13 @@ export async function POST(req: NextRequest) {
       ...({ managed_payments: { enabled: false } } as object),
     });
 
+    if (!session.url) throw new Error("Stripe did not return a checkout URL");
     return NextResponse.json({ url: session.url });
   } catch (err) {
-    console.error("Checkout error:", err);
+    console.error(
+      "Checkout error:",
+      err instanceof Error ? err.name : "Unknown error",
+    );
     return NextResponse.json(
       { error: "Unable to start checkout. Please try again." },
       { status: 500 },

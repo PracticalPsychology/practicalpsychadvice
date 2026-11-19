@@ -1,7 +1,3 @@
-"use client";
-
-import Link from "next/link";
-
 export default function CancelPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-red-50 to-orange-50 flex items-center justify-center px-4">
@@ -26,22 +22,22 @@ export default function CancelPage() {
           Payment Cancelled
         </h1>
         <p className="text-gray-600 mb-8">
-          Your payment was cancelled. No charge has been made to your account.
+          Checkout was closed. You can return to the catalog to try again.
         </p>
 
         <div className="space-y-3">
-          <Link
+          <a
             href="/"
             className="block w-full bg-blue-600 text-white font-semibold py-3 rounded-lg hover:bg-blue-700 transition"
           >
             Return to Home
-          </Link>
-          <Link
-            href="#series"
+          </a>
+          <a
+            href="/#series"
             className="block w-full border-2 border-blue-600 text-blue-600 font-semibold py-3 rounded-lg hover:bg-blue-50 transition"
           >
             Browse Books Again
-          </Link>
+          </a>
         </div>
       </div>
     </div>
